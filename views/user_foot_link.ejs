@@ -1,0 +1,77 @@
+<script src="/plugins/jquery/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="/assets/lib/jquery/dist/jquery.js"></script>
+<script src="/assets/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/assets/lib/wow/dist/wow.js"></script>
+<script src="/assets/lib/jquery.mb.ytplayer/dist/jquery.mb.YTPlayer.js"></script>
+<script src="/assets/lib/isotope/dist/isotope.pkgd.js"></script>
+<script src="/assets/lib/imagesloaded/imagesloaded.pkgd.js"></script>
+<script src="/assets/lib/flexslider/jquery.flexslider.js"></script>
+<script src="/assets/lib/owl.carousel/dist/owl.carousel.min.js"></script>
+<script src="/assets/lib/smoothscroll.js"></script>
+<script src="/assets/lib/magnific-popup/dist/jquery.magnific-popup.js"></script>
+<script src="/assets/lib/simple-text-rotator/jquery.simple-text-rotator.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script>
+<script src="/assets/js/plugins.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/js/login.js"></script>
+<script src="/js/register.js"></script>
+<script>
+    $("#main_category").change(function(){
+      var sub_id=$(this).val();
+      $.ajax({
+          url:'/get_sub_category',
+          type:'post',
+          data:{id:sub_id},
+          dataType:'json',
+          success:function(data){ 
+              $('#sub_category').empty();
+                if (data.status == "success") {
+                    var s_html = '';
+                    for (var i = 0; i < data.result.length; i++) {
+                        var sub_name = data.result[i].c_name;
+                        var sub_id = data.result[i].id;
+                        s_html += "<option value='" + sub_id + "'>" + sub_name + "</option>";
+                    }
+                    $('#sub_category').html(s_html);
+              } else{
+                var s_html = '';
+                s_html += "<option value=''>All</option>";
+                $('#sub_category').html(s_html);
+              }
+          }
+      });
+  });
+  $(document).ready(function(){
+    var main_category = $('#main_category').val();
+    $.ajax({
+        url:'/get_sub_category',
+        type:'post',
+        data:{id:main_category},
+        dataType:'json',
+        success:function(data){ 
+            $('#sub_category').empty();
+            if (data.status == "success") {
+                var s_html = '';
+                for (var i = 0; i < data.result.length; i++) {
+                    var sub_name = data.result[i].c_name;
+                    var sub_id = data.result[i].id;
+                    if(sub_id == main_category)
+                    {
+                        s_html += "<option value='" + sub_id + "' selected>" + sub_name + "</option>";
+                    }else
+                    {
+                        s_html += "<option value='" + sub_id + "'>" + sub_name + "</option>";
+                    }
+                }
+                $('#sub_category').html(s_html);
+            }else{
+                var s_html = '';
+                s_html += "<option value=''>All</option>";
+                $('#sub_category').html(s_html);
+            } 
+        }
+        });
+  })
+</script>

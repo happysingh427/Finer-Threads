@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include user_head.ejs %>
+    <style>
+      .errors{
+        color:red;
+        font-weight: 400;
+      }
+    </style>
+</head>
+<body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
+    <main>
+      <%- include user_nav.ejs %>
+      <%- user_content %>
+      <%- include user_footer.ejs %>
+    </main>
+    <%- include user_foot_link.ejs %>
+</body>
+</html>

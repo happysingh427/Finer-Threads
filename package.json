@@ -1,0 +1,45 @@
+{
+  "name": "basic-html-css-with-expressjs-ejs",
+  "version": "1.0.0",
+  "description": "Build basic HTML & CSS with ExpressJS & EJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/digachandra/Tutor101-HTML-CSS-with-ExpressJS-and-EJS.git"
+  },
+  "keywords": [
+    "HTML",
+    "CSS",
+    "Basic HTML & CSS",
+    "ExpressJS",
+    "NodeJS",
+    "EJS",
+    "TUTOR 101"
+  ],
+  "author": "Septhianto Diga <hi@digachandra.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/digachandra/Tutor101-HTML-CSS-with-ExpressJS-and-EJS/issues"
+  },
+  "homepage": "https://github.com/digachandra/Tutor101-HTML-CSS-with-ExpressJS-and-EJS#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "crypto": "^1.0.1",
+    "dateformat": "^4.5.1",
+    "ejs": "^2.7.4",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
+    "express-session": "^1.17.1",
+    "md5": "^2.3.0",
+    "moment": "^2.29.1",
+    "multer": "^1.4.2",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.7",
+    "razorpay": "^2.0.6"
+  }
+}

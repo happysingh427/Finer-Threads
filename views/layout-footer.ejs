@@ -1,0 +1,510 @@
+<footer class="main-footer">
+    <strong>Copyright &copy; 2014-2021  Ecommerce</a>.</strong>
+    All rights reserved.
+    <div class="float-right d-none d-sm-inline-block">
+      <b>Version</b> 3.1.0
+    </div>
+  </footer>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+<!-- jQuery -->
+<script src="/plugins/jquery/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="/plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- daterangepicker -->
+<script src="/plugins/moment/moment.min.js"></script>
+<script src="/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- Summernote -->
+<script src="/plugins/summernote/summernote-bs4.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="/plugins/jszip/jszip.min.js"></script>
+<script src="/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/js/bootstrap-colorpicker.js"></script>
+<script src="/plugins/select2/js/select2.js"></script>
+<script src="/toastr.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/dist/js/adminlte.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/dist/js/demo.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="/dist/js/pages/dashboard.js"></script>
+<script src="/js/user_add.js"></script>
+<script>
+  $(function () {
+    $("#product_size").val(1).select2();
+    $("#product_color").val(1).select2();
+    $("#pro_size").select2();
+    $("#pro_color").select2();
+    var data_table_user;
+    var size_table;
+    var color_list;
+    var category_list;
+     data_table_user = $("#example1").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+      size_table = $("#size_table").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#size_table_wrapper .col-md-6:eq(0)');
+      color_list = $("#color_table").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#color_table_wrapper .col-md-6:eq(0)');
+      category_list = $("#category_table").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#category_table_wrapper .col-md-6:eq(0)');
+    $(document).on('click', '.delete_user', function () {
+        if (confirm("Do yo want to delete this record?"))
+        {
+            var id = $(this).attr("data-id");
+            $.ajax({
+                url: "/user-delete",
+                type: "POST",
+                data: {id: id},
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1)
+                    {
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "priority": 'success'
+                        }
+                        toastr.success(data.message);
+                        location.reload();
+                    } 
+                    else
+                    {
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "priority": 'error'
+                        }
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        }
+    });
+
+    $(document).on('click', '.delete_size', function () {
+        if (confirm("Do yo want to delete this record?"))
+        {
+            var id = $(this).attr("data-id");
+            $.ajax({
+                url: "/size-delete",
+                type: "POST",
+                data: {id: id},
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1)
+                    {
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "priority": 'success'
+                        }
+                        toastr.success(data.message);
+                        location.reload();
+                    } 
+                    else
+                    {
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "priority": 'error'
+                        }
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        }
+    });
+    $(document).on('click', '.delete_color', function () {
+        if (confirm("Do yo want to delete this record?"))
+        {
+            var id = $(this).attr("data-id");
+            $.ajax({
+                url: "/color-delete",
+                type: "POST",
+                data: {id: id},
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1)
+                    {
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "priority": 'success'
+                        }
+                        toastr.success(data.message);
+                        location.reload();
+                    } 
+                    else
+                    {
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "priority": 'error'
+                        }
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        }
+    });
+    $(document).on('click', '.delete_category', function () {
+        if (confirm("Do yo want to delete this record?"))
+        {
+            var id = $(this).attr("data-id");
+            $.ajax({
+                url: "/category-delete",
+                type: "POST",
+                data: {id: id},
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1)
+                    {
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "priority": 'success'
+                        }
+                        toastr.success(data.message);
+                        location.reload();
+                    } 
+                    else
+                    {
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "priority": 'error'
+                        }
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        }
+    });
+    $(document).on('click', '.delete_product', function () {
+        if (confirm("Do yo want to delete this record?"))
+        {
+            var id = $(this).attr("data-id");
+            $.ajax({
+                url: "/product-delete",
+                type: "POST",
+                data: {id: id},
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1)
+                    {
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "priority": 'success'
+                        }
+                        toastr.success(data.message);
+                        location.reload();
+                    } 
+                    else
+                    {
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "priority": 'error'
+                        }
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        }
+    });
+
+    $("#main_category").change(function(){
+        var sub_id=$(this).val();
+        $.ajax({
+
+            url:'/get_sub_category',
+            type:'post',
+            data:{id:sub_id},
+            dataType:'json',
+            success:function(data){ 
+                $('#sub_category').empty();
+                  if (data.status == "success") {
+                      var s_html = '';
+                      for (var i = 0; i < data.result.length; i++) {
+                          var sub_name = data.result[i].c_name;
+                          var sub_id = data.result[i].id;
+                          s_html += "<option value='" + sub_id + "'>" + sub_name + "</option>";
+                      }
+                      $('#sub_category').html(s_html);
+                } 
+            }
+        });
+    });
+  });
+
+</script>
+<script>
+  $(document).ready(function () {
+      $('#country').change(function () {
+          //  var val = $(this).val();
+          var id = $("select#country option").filter(":selected").val();
+          $.ajax({
+              url: '/get_state',
+              method: "POST",
+              dataType: "json",
+              data: { country: id },
+              success: function (data) {
+                console.log(data);
+                  if (data.status == "success") {
+                      var s_html = '';
+                      for (var i = 0; i < data.result.length; i++) {
+                          var stat_name = data.result[i].name;
+                          var stat_id = data.result[i].id;
+                          s_html += "<option value='" + stat_id + "'>" + stat_name + "</option>";
+                      }
+                      $('#states').html(s_html);
+                  }
+              }
+          });
+      });
+
+      $('#states').change(function () {
+        //  var val = $(this).val();
+        var id = $("select#states option").filter(":selected").val();
+        $.ajax({
+            url: '/get_city',
+            method: "POST",
+            dataType: "json",
+            data: { state: id },
+            success: function (data) {
+                if (data.status == "success") {
+                    var c_html = '';
+                    for (var i = 0; i < data.data.length; i++) {
+                        var city_name = data.data[i].name;
+                        var c_id = data.data[i].id;
+                        c_html += "<option value='" + c_id + "'>" + city_name + "</option>";
+                    }
+                    $('#city').html(c_html);
+                }
+            }
+        });
+    });
+
+    var state_id = $('#state_id').val();
+    var id = $("select#country option").filter(":selected").val();
+    $.ajax({
+        url: '/get_state',
+        method: "POST",
+        dataType: "json",
+        data: { country: id },
+        success: function (data) {
+
+            if (data.status == "success") {
+                var s_html = '';
+                for (var i = 0; i < data.result.length; i++) {
+                    var stat_name = data.result[i].name;
+                    var stat_id = data.result[i].id;
+                    if(stat_id == state_id)
+                    {
+                        s_html += "<option value='" + stat_id + "' selected>" + stat_name + "</option>";
+                    }else
+                    {
+                        s_html += "<option value='" + stat_id + "'>" + stat_name + "</option>";
+                    }
+                }
+                $('#states').html(s_html);
+            }
+        }
+    });
+    var subid = $('#subid').val();
+    $.ajax({
+        url:'/get_sub_category',
+        type:'post',
+        data:{id:subid},
+        dataType:'json',
+        success:function(data){ 
+            $('#sub_category').empty();
+            if (data.status == "success") {
+                var s_html = '';
+                for (var i = 0; i < data.result.length; i++) {
+                    var sub_name = data.result[i].c_name;
+                    var sub_id = data.result[i].id;
+                    if(sub_id == subid)
+                    {
+                        s_html += "<option value='" + sub_id + "' selected>" + sub_name + "</option>";
+                    }else
+                    {
+                        s_html += "<option value='" + sub_id + "'>" + sub_name + "</option>";
+                    }
+                }
+                $('#sub_category').html(s_html);
+            } 
+        }
+        });
+  });
+
+  $(function () {
+      $('#c_picker').colorpicker();
+    });
+</script>

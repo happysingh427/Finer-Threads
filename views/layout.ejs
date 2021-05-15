@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    .errors{
+      color: red;
+    }
+    img.img-responsive.cat-img{
+        border: 2px solid #dac9c9;
+        border-radius: 10px;
+    }
+  </style>
+  <%- include layout-header.ejs %>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+  <%- include layout-top_nav.ejs %>
+  <%- include layout-slidebar.ejs  %>
+  <%- content %>
+  <%- include layout-footer.ejs %>
+</body>
+</html>
