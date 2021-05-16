@@ -1,0 +1,121 @@
+<%- contentFor('user_content') %>
+<div class="main">
+    <section class="module">
+      <div class="container">
+        <%if (locals.message) { %>
+            <div class="alert <%= messageClass %>" role="alert">
+              <%= message %>
+          </div>
+          <% } %>
+        <div class="row">
+            <% if(product_list.length == 1){ %>
+            <% for(var i=0; i < product_list.length; i++) { %>
+          <div class="col-sm-6 mb-sm-40"><a class="gallery" href="/uploads/<%= product_list[i].p_image %>"><img src="/uploads/<%= product_list[i].p_image %>" alt="uploads/<%= product_list[i].p_name %>"/></a>
+          </div>
+          <div class="col-sm-6">
+            <div class="row">
+              <div class="col-sm-12">
+                <h1 class="product-title font-alt"><%= product_list[i].p_name %></h1>
+              </div>
+            </div>
+            <div class="row mb-20">
+              <div class="col-sm-12">
+                <div class="price font-alt"><span class="amount">$<%= product_list[i].p_price %></span></div>
+              </div>
+            </div>
+            <div class="row mb-20">
+              <div class="col-sm-12">
+                <div class="description">
+                  <p><%= product_list[i].description %></p>
+                </div>
+              </div>
+            </div>
+            <form action="" method="post" name="add_cart" id="add_cart">
+                <div class="row mb-20">
+                <div class="col-sm-4 mb-sm-20">
+                    <label for="quntity">Quntity</label>
+                    <input class="form-control input-lg" type="number" name="quntity" id="quntity" value="1" max="40" min="1" required="required"/>
+                </div>
+                <div class="col-sm-4 mb-sm-20">
+                    <label for="size">Size</label>
+                    <select name="size" id="size" class="form-control input-lg">
+                        <% for(var j=0; j < size.length ; j++) { %> 
+                            <option value="<%= size[j].id %>"><%= size[j].size %></option>
+                        <% } %>
+                    </select>
+                </div>
+                <div class="col-sm-4 mb-sm-20">
+                    <label for="color">Color</label>
+                    <select name="color" id="color" class="form-control input-lg">
+                        <% for(var j=0; j < color.length ; j++) { %> 
+                            <option value="<%= color[j].id %>"><%= color[j].color %></option>
+                        <% } %>
+                    </select>
+                </div>
+                <input type="hidden" name="p_id" id="p_id" value="<%= product_list[i].id %>">
+                <input type="hidden" name="p_price" id="p_price" value="<%= product_list[i].p_price %>">
+                <% if(product_list[i].p_quntity != 0){ %>
+                    <div class="col-sm-8" style="margin-top: 35px;"><button type="submit" class="btn btn-lg btn-block btn-round btn-b">Add To Cart</button></div>
+                <% } else { %>
+                    <div class="col-sm-8" style="margin-top: 35px;"><button disabled class="btn btn-lg btn-block btn-round btn-b">Out of stock</button></div>
+                <% } %>
+                </div>
+
+            </form>
+            <div class="row mb-20">
+              <div class="col-sm-12">
+                <div class="product_meta">Categories:<a href="#"> ,<%= product_list[i].name %> </a><a href="#"><%= product_list[i].c_name %> </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } %>
+          <% } %>
+        </div>
+      </div>
+    </section>
+   <!-- <hr class="divider-w">
+    <section class="module-small">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h2 class="module-title font-alt">Related Products</h2>
+          </div>
+        </div>
+        <div class="row multi-columns-row">
+          <div class="col-sm-6 col-md-3 col-lg-3">
+            <div class="shop-item">
+              <div class="shop-item-image"><img src="assets/images/shop/product-11.jpg" alt="Accessories Pack"/>
+                <div class="shop-item-detail"><a class="btn btn-round btn-b"><span class="icon-basket">Add To Cart</span></a></div>
+              </div>
+              <h4 class="shop-item-title font-alt"><a href="#">Accessories Pack</a></h4>£9.00
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3 col-lg-3">
+            <div class="shop-item">
+              <div class="shop-item-image"><img src="assets/images/shop/product-12.jpg" alt="Men’s Casual Pack"/>
+                <div class="shop-item-detail"><a class="btn btn-round btn-b"><span class="icon-basket">Add To Cart</span></a></div>
+              </div>
+              <h4 class="shop-item-title font-alt"><a href="#">Men’s Casual Pack</a></h4>£12.00
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3 col-lg-3">
+            <div class="shop-item">
+              <div class="shop-item-image"><img src="assets/images/shop/product-13.jpg" alt="Men’s Garb"/>
+                <div class="shop-item-detail"><a class="btn btn-round btn-b"><span class="icon-basket">Add To Cart</span></a></div>
+              </div>
+              <h4 class="shop-item-title font-alt"><a href="#">Men’s Garb</a></h4>£6.00
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3 col-lg-3">
+            <div class="shop-item">
+              <div class="shop-item-image"><img src="assets/images/shop/product-14.jpg" alt="Cold Garb"/>
+                <div class="shop-item-detail"><a class="btn btn-round btn-b"><span class="icon-basket">Add To Cart</span></a></div>
+              </div>
+              <h4 class="shop-item-title font-alt"><a href="#">Cold Garb</a></h4>£14.00
+            </div>
+          </div>
+        </div>
+      </div>
+    </section> -->
+ 
