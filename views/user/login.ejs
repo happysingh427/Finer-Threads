@@ -1,0 +1,47 @@
+<%- contentFor('user_content') %>
+<style>
+  .login-main {
+    border: 2px solid #e8d7d7;
+    border-radius: 20px;
+    padding: 10px 10px 0px 13px;
+    }
+</style>
+<div class="main">
+    <section class="module bg-dark-30" data-background="assets/images/section-4.jpg">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h1 class="module-title font-alt mb-0">Login</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="module">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-5 col-sm-offset-3 mb-sm-40 login-main">
+            <h4 class="font-alt text-center">Login</h4>
+            <hr class="divider-w mb-10">
+
+            <form class="form" method="post" name="login" id="login" action="/login">
+                <%if (locals.message) { %>
+                    <div class="alert <%= messageClass %>" role="alert">
+                      <%= message %>
+                  </div>
+                  <% } %>
+              <div class="form-group">
+                <input class="form-control" id="username" type="text" name="username" placeholder="Username" value="<%= locals.username%>"/>
+              </div>
+              <div class="form-group">
+                <input class="form-control" id="password" type="password" name="password" placeholder="Password"/>
+              </div>
+              <div class="form-group">
+                <button class="btn btn-block btn-round btn-b">Login</button>
+              </div>
+              <div class="form-group"><a href="/register">Create a new account?</a></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
