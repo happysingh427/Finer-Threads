@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: May 16, 2021 at 07:09 PM
--- Server version: 10.4.18-MariaDB
--- PHP Version: 7.3.28
+-- Host: 127.0.0.1:3306
+-- Generation Time: May 16, 2021 at 06:53 PM
+-- Server version: 5.7.31
+-- PHP Version: 7.3.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,17 +24,54 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cart`
+--
+
+DROP TABLE IF EXISTS `cart`;
+CREATE TABLE IF NOT EXISTS `cart` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `p_id` int(11) NOT NULL,
+  `size_id` int(11) NOT NULL,
+  `color_id` int(11) NOT NULL,
+  `quntity` bigint(20) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `total_price` decimal(10,2) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cart`
+--
+
+INSERT INTO `cart` (`id`, `user_id`, `p_id`, `size_id`, `color_id`, `quntity`, `price`, `total_price`, `status`) VALUES
+(1, 1, 1, 3, 1, 1, '100.00', '100.00', 1),
+(2, 1, 8, 1, 1, 2, '100.00', '200.00', 1),
+(3, 1, 9, 4, 5, 3, '50.00', '150.00', 1),
+(4, 9, 3, 1, 1, 1, '100.00', '100.00', 1),
+(5, 11, 4, 3, 1, 3, '100.00', '300.00', 1),
+(6, 11, 3, 3, 1, 4, '100.00', '400.00', 1),
+(7, 12, 1, 1, 1, 1, '100.00', '100.00', 1),
+(8, 12, 4, 1, 1, 1, '100.00', '100.00', 1),
+(9, 12, 5, 1, 1, 1, '100.00', '100.00', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `color`
 --
 
-CREATE TABLE `color` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `color`;
+CREATE TABLE IF NOT EXISTS `color` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `color` varchar(100) NOT NULL,
   `color_code` text NOT NULL,
   `description` text NOT NULL,
   `created` date DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `color`
@@ -52,11 +89,13 @@ INSERT INTO `color` (`id`, `color`, `color_code`, `description`, `created`, `sta
 -- Table structure for table `main_catagary`
 --
 
-CREATE TABLE `main_catagary` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `main_catagary`;
+CREATE TABLE IF NOT EXISTS `main_catagary` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `main_catagary`
@@ -73,35 +112,39 @@ INSERT INTO `main_catagary` (`id`, `name`, `status`) VALUES
 -- Table structure for table `members`
 --
 
-CREATE TABLE `members` (
-  `id` int(11) NOT NULL,
-  `role_id` tinyint(4) NOT NULL DEFAULT 2 COMMENT '1-admin 2-user',
+DROP TABLE IF EXISTS `members`;
+CREATE TABLE IF NOT EXISTS `members` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_id` tinyint(4) NOT NULL DEFAULT '2' COMMENT '1-admin 2-user',
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   `email_id` text NOT NULL,
   `phone_no` varchar(50) DEFAULT NULL,
-  `profile_pic` text DEFAULT NULL,
-  `address` text DEFAULT NULL,
-  `city` text DEFAULT NULL,
-  `state` text DEFAULT NULL,
+  `profile_pic` text,
+  `address` text,
+  `city` text,
+  `state` text,
   `country` int(11) DEFAULT NULL,
   `zipcode` varchar(50) DEFAULT NULL,
   `password` text NOT NULL,
-  `forgot_code` text DEFAULT NULL,
+  `forgot_code` text,
   `added_date` varchar(100) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `members`
 --
 
 INSERT INTO `members` (`id`, `role_id`, `first_name`, `last_name`, `email_id`, `phone_no`, `profile_pic`, `address`, `city`, `state`, `country`, `zipcode`, `password`, `forgot_code`, `added_date`, `status`) VALUES
-(0, 2, 'ayush', 'sss', 'sss@hotmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '81dc9bdb52d04dc20036dbd8313ed055', NULL, '1621184776135', 1),
 (1, 2, 'info', 'patel', 'info@gmail.com', '9874562358', 'Desert.jpg', 'Test data', '17180', '869', 39, '65655', '81dc9bdb52d04dc20036dbd8313ed055', 'IOM71F9G', '1615873615', 1),
 (2, 1, 'admin', 'admin', 'admin@gmail.com', '9658745685', '', 'test', '16225', '867', 39, '789456', '81dc9bdb52d04dc20036dbd8313ed055', NULL, '1615873727', 1),
 (8, 2, 'test', 'patel', 'abc@gmail.com', '+919106867460', 'Koala.jpg', 'test', '17204', '869', 39, '394130', '202cb962ac59075b964b07152d234b70', NULL, '1620061166559', 1),
-(9, 2, 'gurmit', 'sing', 'gurmit@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '202cb962ac59075b964b07152d234b70', NULL, '1620506118206', 1);
+(9, 2, 'gurmit', 'sing', 'gurmit@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '202cb962ac59075b964b07152d234b70', NULL, '1620506118206', 1),
+(10, 2, 'prashant', 'gupta', 'prashant.gupta96@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '81dc9bdb52d04dc20036dbd8313ed055', NULL, '1621123004264', 1),
+(11, 2, 'gurmeet', 'singh', 'gurmeet123@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '3f5fa74985c16e98fa49b34650586f2c', NULL, '1621123347485', 1),
+(12, 2, 'prashant', 'gupta', 'prashantgupta123@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '81dc9bdb52d04dc20036dbd8313ed055', NULL, '1621189621374', 1);
 
 -- --------------------------------------------------------
 
@@ -109,8 +152,9 @@ INSERT INTO `members` (`id`, `role_id`, `first_name`, `last_name`, `email_id`, `
 -- Table structure for table `products`
 --
 
-CREATE TABLE `products` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `products`;
+CREATE TABLE IF NOT EXISTS `products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `main_id` int(11) NOT NULL,
   `sub_id` int(11) NOT NULL,
   `p_name` varchar(255) NOT NULL,
@@ -119,8 +163,9 @@ CREATE TABLE `products` (
   `p_quntity` decimal(10,2) NOT NULL,
   `description` text NOT NULL,
   `created` date DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `products`
@@ -142,12 +187,14 @@ INSERT INTO `products` (`id`, `main_id`, `sub_id`, `p_name`, `p_image`, `p_price
 -- Table structure for table `product_color`
 --
 
-CREATE TABLE `product_color` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `product_color`;
+CREATE TABLE IF NOT EXISTS `product_color` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `p_id` int(11) NOT NULL,
   `color_id` int(11) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `product_color`
@@ -189,12 +236,14 @@ INSERT INTO `product_color` (`id`, `p_id`, `color_id`, `status`) VALUES
 -- Table structure for table `product_size`
 --
 
-CREATE TABLE `product_size` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `product_size`;
+CREATE TABLE IF NOT EXISTS `product_size` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `p_id` int(11) NOT NULL,
   `s_id` int(11) NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `product_size`
@@ -237,12 +286,14 @@ INSERT INTO `product_size` (`id`, `p_id`, `s_id`, `status`) VALUES
 -- Table structure for table `role`
 --
 
-CREATE TABLE `role` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `role`;
+CREATE TABLE IF NOT EXISTS `role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `status` tinyint(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `status` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `role`
@@ -258,13 +309,15 @@ INSERT INTO `role` (`id`, `name`, `description`, `status`) VALUES
 -- Table structure for table `size`
 --
 
-CREATE TABLE `size` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `size`;
+CREATE TABLE IF NOT EXISTS `size` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `size` varchar(50) NOT NULL,
   `description` text NOT NULL,
   `created` date DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `size`
@@ -284,15 +337,17 @@ INSERT INTO `size` (`id`, `size`, `description`, `created`, `status`) VALUES
 -- Table structure for table `sub_catagary`
 --
 
-CREATE TABLE `sub_catagary` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `sub_catagary`;
+CREATE TABLE IF NOT EXISTS `sub_catagary` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `main_id` int(11) NOT NULL,
   `c_name` varchar(255) NOT NULL,
   `c_image` text NOT NULL,
   `c_description` text NOT NULL,
   `created` date DEFAULT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `sub_catagary`
@@ -309,58 +364,6 @@ INSERT INTO `sub_catagary` (`id`, `main_id`, `c_name`, `c_image`, `c_description
 (9, 1, 'Shorts', 'sho1.webp', 'shorts', '2021-05-07', 1),
 (10, 2, 'Sarees', 'sar1.webp', 'sarees', '2021-05-07', 1),
 (11, 3, 'Kids t-shirts', 'kts1.webp', 'kids t-shirts', '2021-05-07', 1);
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `color`
---
-ALTER TABLE `color`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `main_catagary`
---
-ALTER TABLE `main_catagary`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `members`
---
-ALTER TABLE `members`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `products`
---
-ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `product_color`
---
-ALTER TABLE `product_color`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `product_size`
---
-ALTER TABLE `product_size`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `role`
---
-ALTER TABLE `role`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `size`
---
-ALTER TABLE `size`
-  ADD PRIMARY KEY (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

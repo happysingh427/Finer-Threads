@@ -1,0 +1,96 @@
+<%- contentFor('user_content') %>
+<div class="main">
+    <section class="module">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h1 class="module-title font-alt">Cart</h1>
+          </div>
+        </div>
+        <hr class="divider-w pt-20">
+        <% if(cart.length != 0) { %>
+        <div class="row">
+          <div class="col-sm-12">
+            <table class="table table-striped table-border checkout-table">
+              <tbody>
+                <tr>
+                  <th class="hidden-xs">Item</th>
+                  <th>Description</th>
+                  <th class="hidden-xs">Price</th>
+                  <th>Quantity</th>
+                  <th>Size</th>
+                  <th>Color</th>
+                  <th>Total</th>
+                  <th>Remove</th>
+                </tr>
+                <% for(var i=0; i < cart.length; i++) { %>
+                <tr>
+                  <td class="hidden-xs"><a href="#"><img src="/uploads/<%= cart[i].p_image %>" alt="<%= cart[i].p_name %>"/></a></td>
+                  <td>
+                    <h5 class="product-title font-alt"><%= cart[i].p_name %></h5>
+                  </td>
+                  <td class="hidden-xs">
+                    <h5 class="product-title font-alt">$<%= cart[i].price %></h5>
+                  </td>
+                  <td>
+                    <input class="form-control" type="number" name="quntity" value="<%= cart[i].quntity %>" max="50" min="1"/>
+                  </td>
+                  <td class="hidden-xs">
+                    <h5 class="product-title font-alt"><%= cart[i].size %></h5>
+                  </td>
+                  <td class="hidden-xs">
+                    <h5 class="product-title font-alt"><%= cart[i].color %></h5>
+                  </td>
+                  <td>
+                    <h5 class="product-title font-alt">$<%= (cart[i].quntity * cart[i].price).toFixed(2) %></h5>
+                  </td>
+                  <td class="pr-remove"><a href="#" title="Remove"><i class="fa fa-times"></i></a></td>
+                </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+          </div>
+          <div class="col-sm-3">    
+          </div>
+          <div class="col-sm-3 col-sm-offset-3">
+            <div class="form-group">
+              <button class="btn btn-block btn-round btn-d pull-right" type="submit">Update Cart</button>
+            </div>
+          </div>
+        </div>
+        <hr class="divider-w">
+       <div class="row mt-70">
+          <div class="col-sm-5 col-sm-offset-7">
+            <div class="shop-Cart-totalbox">
+              <h4 class="font-alt">Cart Totals</h4>
+              <table class="table table-striped table-border checkout-table">
+                <tbody>
+                  <% for(var i=0; i < cart_total.length; i++) { %>
+                  <tr>
+                    <th>Cart Subtotal :</th>
+                    <td>$<%= cart_total[i].tot_price %></td>
+                  </tr>
+                  <tr>
+                    <th>Shipping Total :</th>
+                    <td>$2.00</td>
+                  </tr>
+                  <tr class="shop-Cart-totalprice">
+                    <th>Total :</th>
+                    <td>$<%= cart_total[i].tot_price + 2 %></td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+              <button class="btn btn-lg btn-block btn-round btn-d" type="submit">Proceed to Checkout</button>
+            </div>
+          </div>
+        </div> 
+        <% } else { %>
+            <h2 class="text-center">Cart is empty please explor products <a href="/products" class="btn btn-dark">View products</a></h2>
+         <% } %>
+      </div>
+    </section>
