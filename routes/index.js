@@ -441,6 +441,97 @@ router.post('/single-product/:id',function(req,res,next){
     res.redirect('/login');
   }
 })
+router.get('/color-add',function(req,res,next){
+  if(req.session.role_id == 1){
+      res.render("admin/color_add", {layout: "layout",title: 'Color Add',colorlink:'active'})   
+  }else{
+    res.redirect('/login');
+  }
+});
+
+router.post('/color-add',function(req,res,next){
+
+  if(req.session.role_id == 1){
+    const { c_name,color_picker,description } = req.body;
+    var errors = [];
+    var sql = `SELECT * FROM color WHERE color_code="${color_picker}"`;
+    connection.query(sql, function(err, rows, fields) {
+      if(rows.length == 0)
+      {
+        var sql = `INSERT INTO color(color,color_code,description) VALUES ("${c_name}","${color_picker}","${description}")`;
+        connection.query(sql, function(err, result) {
+          if (err) throw err;
+            errors.push("Color add successfully");
+            res.render("admin/color_add", { message : errors, messageClass: 'alert-success',layout: "layout",colorlink:'active'});
+        }); 
+      }else{
+        errors.push("Color alredy exists");
+        res.render("admin/color_add", { message : errors, messageClass: 'alert-danger',layout: "layout",colorlink:'active',c_name,color_picker,description});
+      }
+    });
+}else{
+  res.redirect('/login');
+}
+})
+
+router.get('/color-list', function(req, res, next) {
+  if(req.session.role_id == 1){
+    var sql = `SELECT * FROM color`;
+    connection.query(sql, function(err, rows, fields) {
+      res.render("admin/color_list", {layout: "layout",title: 'Color List', colors: rows,colorlink:'active'})
+    })
+  }else{
+    res.redirect('/login');
+  }
+})
+
+router.get('/color-edit/:id', function(req, res, next) {
+  if(req.session.role_id == 1){
+    var id = req.params.id;
+    var sql = `SELECT * FROM color where id="${id}"`;
+    connection.query(sql, function(err, rows, fields) {
+        if(rows.length == 1)
+        {
+          res.render("admin/color_edit", {color_data:rows,up_id:rows[0].id,layout: "layout",colorlink:'active' });
+        }
+    })
+  }else{
+    res.redirect('/login');
+  }
+})
+
+router.post('/color-edit/:id', function(req, res, next){
+  if(req.session.role_id == 1){
+    var id = req.params.id;
+    var errors = [];
+    const { c_name,color_picker,description } = req.body
+    var up_query = `UPDATE color SET color="${c_name}",color_code="${color_picker}",description="${description}"  WHERE id="${id}"`;
+    connection.query(up_query, function(err, result, fields) {
+      if (err) throw err;
+      var sql = `SELECT * FROM color where id="${id}"`;
+      connection.query(sql, function(err, rows, fields) {
+          if(rows.length == 1)
+          {
+            errors.push("Color update successfully");
+            res.render("admin/color_edit", {message : errors, messageClass: 'alert-success',color_data:rows,up_id:rows[0].id,layout: "layout",colorlink:'active' });
+          }
+      })
+    })
+  }else{
+    res.redirect('/login');
+  }
+})
+
+router.post('/color-delete',function(req,res,next){
+  var id = req.body.id;
+  let sql = `DELETE FROM color WHERE id = ?`;
+  connection.query(sql, id, (error, results, fields) => {
+    if (error)
+      return console.error(error.message);
+      res.json({status:"1",message:"Delete Color successfully"})
+    
+  });
+})
 // category
 
 router.get('/category-add',function(req,res,next){
