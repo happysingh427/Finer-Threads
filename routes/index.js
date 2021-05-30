@@ -441,6 +441,96 @@ router.post('/single-product/:id',function(req,res,next){
     res.redirect('/login');
   }
 })
+router.get('/size-list', function(req, res, next) {
+  if(req.session.role_id == 1){
+    var sql = `SELECT * FROM size`;
+    connection.query(sql, function(err, rows, fields) {
+      res.render("admin/size_list", {layout: "layout",title: 'Size List', sizes: rows,sizelink:'active'})
+    })
+  }else{
+    res.redirect('/login');
+  }
+})
+router.get('/size-edit/:id', function(req, res, next) {
+  if(req.session.role_id == 1){
+    var id = req.params.id;
+    var sql = `SELECT * FROM size where id="${id}"`;
+    connection.query(sql, function(err, rows, fields) {
+        if(rows.length == 1)
+        {
+          res.render("admin/size_edit", {size_data:rows,up_id:rows[0].id,layout: "layout",sizelink:'active' });
+        }
+    })
+  }else{
+    res.redirect('/login');
+  }
+})
+
+router.post('/size-edit/:id', function(req, res, next){
+  if(req.session.role_id == 1){
+    var id = req.params.id;
+    var errors = [];
+    const { size,description } = req.body
+    var up_query = `UPDATE size SET size="${size}",description="${description}"  WHERE id="${id}"`;
+    connection.query(up_query, function(err, result, fields) {
+      if (err) throw err;
+      var sql = `SELECT * FROM size where id="${id}"`;
+      connection.query(sql, function(err, rows, fields) {
+          if(rows.length == 1)
+          {
+            errors.push("Size update successfully");
+            res.render("admin/size_edit", {message : errors, messageClass: 'alert-success',size_data:rows,up_id:rows[0].id,layout: "layout",sizelink:'active' });
+          }
+      })
+    })
+  }else{
+    res.redirect('/login');
+  }
+})
+router.post('/size-delete',function(req,res,next){
+  var id = req.body.id;
+  let sql = `DELETE FROM size WHERE id = ?`;
+  connection.query(sql, id, (error, results, fields) => {
+    if (error)
+      return console.error(error.message);
+      res.json({status:"1",message:"Delete Size successfully"})
+    
+  });
+})
+
+router.get('/size-add',function(req,res,next){
+  if(req.session.role_id == 1){
+      res.render("admin/size_add", {layout: "layout",title: 'Size Add',sizelink:'active'})   
+  }else{
+    res.redirect('/login');
+  }
+});
+
+router.post('/size-add',function(req,res,next){
+
+  if(req.session.role_id == 1){
+    const { size,description } = req.body;
+    var errors = [];
+    var sql = `SELECT * FROM size WHERE size="${size}"`;
+    connection.query(sql, function(err, rows, fields) {
+      if(rows.length == 0)
+      {
+        var sql = `INSERT INTO size(size,description) VALUES ("${size}","${description}")`;
+        connection.query(sql, function(err, result) {
+          if (err) throw err;
+            errors.push("Size add successfully");
+            res.render("admin/size_add", { message : errors, messageClass: 'alert-success',layout: "layout",sizelink:'active'});
+        }); 
+      }else{
+        errors.push("Size alredy exists");
+        res.render("admin/size_add", { message : errors, messageClass: 'alert-danger',layout: "layout",sizelink:'active',size,description});
+      }
+    });
+}else{
+  res.redirect('/login');
+}
+})
+
 router.get('/color-add',function(req,res,next){
   if(req.session.role_id == 1){
       res.render("admin/color_add", {layout: "layout",title: 'Color Add',colorlink:'active'})   
