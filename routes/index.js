@@ -60,6 +60,200 @@ router.get('/admin', function(req, res, next) {
     res.redirect('/login');
   }
   })
+  router.get('/product-list', function(req, res, next) {
+    if(req.session.role_id == 1){
+      var sql = `SELECT pro.*,main.name,sub.c_name 
+                    FROM products as pro 
+                    LEFT JOIN main_catagary as main on main.id = pro.main_id
+                    LEFT JOIN sub_catagary as sub on sub.id = pro.sub_id`;
+      connection.query(sql, function(err, rows, fields) {
+        res.render("admin/product_list", {layout: "layout",title: 'Product List', product: rows,productlink:'active'})
+      })
+    }else{
+      res.redirect('/login');
+    }
+  })
+  
+  router.get('/product-edit/:id',function(req, res, next){
+    if(req.session.role_id == 1){
+      var id = req.params.id;
+       var sql = `SELECT pro.*,main.name,sub.c_name,stser.size_ids,pco.color_ids
+            FROM products as pro 
+            LEFT JOIN (
+              select psize.*,GROUP_CONCAT(s.size) as p_size, GROUP_CONCAT(s.id) as size_ids from product_size as psize
+                LEFT JOIN size as s on s.id = psize.s_id group by psize.p_id
+              ) as stser ON stser.p_id = pro.id
+            LEFT JOIN (
+              select pcolor.*,GROUP_CONCAT(s.color) as p_color, GROUP_CONCAT(s.id) as color_ids from product_color as pcolor
+                LEFT JOIN color as s on s.id = pcolor.color_id group by pcolor.p_id
+              ) as pco ON pco.p_id = pro.id
+            LEFT JOIN main_catagary as main on main.id = pro.main_id
+            LEFT JOIN sub_catagary as sub on sub.id = pro.sub_id WHERE pro.id = "${id}"`;
+            connection.query(sql, function(err, rows, fields) {
+              const status = 1;
+              let sql4 = `SELECT * FROM main_catagary WHERE status = "${status}"`;
+              connection.query(sql4, function(err, main_cat, fields) {
+                  if (err) throw err;
+                  const status = 1;
+                  let sql2 =  `SELECT id,size FROM size WHERE status = ${status}`;
+                  connection.query(sql2, function(err, size, fields) {
+                    let sql3 =  `SELECT id,color FROM color WHERE status = ${status}`;
+                    connection.query(sql3, function(err, color, fields) {
+                      res.render("admin/product_edit", {layout: "layout",m_cat:main_cat,size:size,color:color,product: rows,up_id:rows[0].id,title: 'Product Edit',productlink:'active'}) 
+                    }) 
+                  }) 
+              })
+             // res.render("admin/product_edit", {layout: "layout",title: 'Product Edit', product: rows,productlink:'active'})
+            })
+    }else{
+      res.redirect('/login');
+    }
+  })
+  
+  router.post('/product-edit/:id',function(req,res,next){
+    if(req.session.role_id == 1){
+      var id = req.params.id;
+      var profile_pic = '';
+      const status = 1;
+      let sql = `SELECT * FROM main_catagary WHERE status = "${status}"`;
+      connection.query(sql, function(err, main_cat, fields) {
+          if (err) throw err;
+          const status = 1;
+          let sql2 =  `SELECT id,size FROM size WHERE status = ${status}`;
+          connection.query(sql2, function(err, size, fields) {
+            let sql3 =  `SELECT id,color FROM color WHERE status = ${status}`;
+            connection.query(sql3, function(err, color, fields) {
+              var upload = multer({ storage : storage}).single('product_image');
+                upload(req,res,function(err) { 
+                   const { main_category,subid,sub_category,product_name,product_price,dis_price,product_quntity,pro_size,pro_color,description,pro_img } = req.body;
+                    var errors = [];
+                    if(pro_img == '')
+                    {
+                      var p_list = `SELECT pro.*,main.name,sub.c_name,stser.size_ids,pco.color_ids
+                      FROM products as pro 
+                      LEFT JOIN (
+                        select psize.*,GROUP_CONCAT(s.size) as p_size, GROUP_CONCAT(s.id) as size_ids from product_size as psize
+                          LEFT JOIN size as s on s.id = psize.s_id group by psize.p_id
+                        ) as stser ON stser.p_id = pro.id
+                      LEFT JOIN (
+                        select pcolor.*,GROUP_CONCAT(s.color) as p_color, GROUP_CONCAT(s.id) as color_ids from product_color as pcolor
+                          LEFT JOIN color as s on s.id = pcolor.color_id group by pcolor.p_id
+                        ) as pco ON pco.p_id = pro.id
+                      LEFT JOIN main_catagary as main on main.id = pro.main_id
+                      LEFT JOIN sub_catagary as sub on sub.id = pro.sub_id WHERE pro.id = "${id}"`;
+                      connection.query(p_list, function(err, rows, fields) {
+                        errors.push("Product Image is required");
+                        res.render("admin/product_edit", {message : errors, messageClass: 'alert-danger',layout: "layout",m_cat:main_cat,size:size,color:color,product: rows,up_id:rows[0].id,title: 'Product Edit',productlink:'active'}) 
+                      })
+                    }else{
+                      if(req.file != null && typeof req.file == 'object') 
+                      {
+                        profile_pic = req.file.originalname;
+                      }
+                      if(profile_pic == '')
+                      {
+                        const { main_category,subid,sub_category,product_name,product_price,dis_price,product_quntity,pro_size,pro_color,description,pro_img } = req.body;
+                        var up_query = `UPDATE products SET main_id="${main_category}",sub_id="${sub_category}",p_name="${product_name}",p_image="${pro_img}",p_price="${product_price}",dis_price="${dis_price}",p_quntity="${product_quntity}",description="${description}"  WHERE id="${id}"`;
+                      }else{
+                        const { main_category,subid,sub_category,product_name,product_price,dis_price,product_quntity,pro_size,pro_color,description,pro_img } = req.body;
+                        var up_query = `UPDATE products SET main_id="${main_category}",sub_id="${sub_category}",p_name="${product_name}",p_image="${profile_pic}",p_price="${product_price}",dis_price="${dis_price}",p_quntity="${product_quntity}",description="${description}"  WHERE id="${id}"`;
+                      }
+                      connection.query(up_query, function(err, result, fields) {
+                        if (err) throw err;
+                        var p_list = `SELECT pro.*,main.name,sub.c_name,stser.size_ids,pco.color_ids
+                                        FROM products as pro 
+                                        LEFT JOIN (
+                                          select psize.*,GROUP_CONCAT(s.size) as p_size, GROUP_CONCAT(s.id) as size_ids from product_size as psize
+                                            LEFT JOIN size as s on s.id = psize.s_id group by psize.p_id
+                                          ) as stser ON stser.p_id = pro.id
+                                        LEFT JOIN (
+                                          select pcolor.*,GROUP_CONCAT(s.color) as p_color, GROUP_CONCAT(s.id) as color_ids from product_color as pcolor
+                                            LEFT JOIN color as s on s.id = pcolor.color_id group by pcolor.p_id
+                                          ) as pco ON pco.p_id = pro.id
+                                        LEFT JOIN main_catagary as main on main.id = pro.main_id
+                                        LEFT JOIN sub_catagary as sub on sub.id = pro.sub_id WHERE pro.id = "${id}"`;
+                              connection.query(p_list, function(err, rows, fields) {
+                                if(rows.length == 1)
+                                {
+                                  var size_ids = rows[0].size_ids.split(',');
+                                  var difference = pro_size.filter(x => !size_ids.includes(x)); //add
+                                  var difference2 = size_ids.filter(x => !pro_size.includes(x)); //delete                                                                                              
+                                  if(difference.length > 0)
+                                  {
+                                    for(i=0;i<difference.length;i++)
+                                    {
+                                      var add_sql2 = `INSERT INTO product_size(p_id,s_id) VALUES("${id}","${difference[i]}")`;
+                                      connection.query(add_sql2, function(err, result) {
+                                        if (err) throw err;
+                                        console.log('insert success')
+                                      })
+                                    }
+                                  }
+                                  if(difference2.length > 0)
+                                  {
+                                    for(i=0;i<difference2.length;i++)
+                                    {
+                                      var del_sql2 = `DELETE FROM product_size WHERE p_id = ${id} AND s_id = ${difference2[i]}`;
+                                      connection.query(del_sql2, function(err, result) {
+                                        if (err) throw err;
+                                        console.log('deleted success')
+                                      })
+                                    }
+                                  }              
+                                var color_ids = rows[0].color_ids.split(',');
+                                var c_difference = pro_color.filter(x => !color_ids.includes(x)); //add
+                                var c_difference2 = color_ids.filter(x => !pro_color.includes(x)); //delete    
+                                if(c_difference.length > 0)
+                                {
+                                  for(i=0;i<c_difference.length;i++)
+                                  {
+                                    var add_sql2 = `INSERT INTO product_color(p_id,color_id) VALUES("${id}","${c_difference[i]}")`;
+                                    connection.query(add_sql2, function(err, result) {
+                                      if (err) throw err;
+                                      console.log('insert success')
+                                    })
+                                  }
+                                }
+                                if(c_difference2.length > 0)
+                                {
+                                  for(i=0;i<c_difference2.length;i++)
+                                  {
+                                    var del_sql2 = `DELETE FROM product_color WHERE p_id = ${id} AND color_id = ${c_difference2[i]}`;
+                                    connection.query(del_sql2, function(err, result) {
+                                      if (err) throw err;
+                                      console.log('deleted success')
+                                    })
+                                  }
+                                }              
+                              }
+                              var pro_list = `SELECT pro.*,main.name,sub.c_name,stser.size_ids,pco.color_ids
+                                  FROM products as pro 
+                                  LEFT JOIN (
+                                    select psize.*,GROUP_CONCAT(s.size) as p_size, GROUP_CONCAT(s.id) as size_ids from product_size as psize
+                                      LEFT JOIN size as s on s.id = psize.s_id group by psize.p_id
+                                    ) as stser ON stser.p_id = pro.id
+                                  LEFT JOIN (
+                                    select pcolor.*,GROUP_CONCAT(s.color) as p_color, GROUP_CONCAT(s.id) as color_ids from product_color as pcolor
+                                      LEFT JOIN color as s on s.id = pcolor.color_id group by pcolor.p_id
+                                    ) as pco ON pco.p_id = pro.id
+                                  LEFT JOIN main_catagary as main on main.id = pro.main_id
+                                  LEFT JOIN sub_catagary as sub on sub.id = pro.sub_id WHERE pro.id = "${id}"`;
+                                  connection.query(pro_list, function(err, rows1, fields) {
+                                    errors.push("Product Update Successfully");
+                                    res.render("admin/product_edit", {message : errors, messageClass: 'alert-success',layout: "layout",m_cat:main_cat,size:size,color:color,product: rows1,up_id:rows1[0].id,title: 'Product Edit',productlink:'active'}) 
+                                  })
+                          });
+                          
+                      });
+                    }
+                })
+            }) 
+          }) 
+      })
+    }else{
+      res.redirect('/login');
+    }
+  });
 
 
 router.get('/', function(req, res, next) {

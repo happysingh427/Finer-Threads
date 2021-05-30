@@ -1,0 +1,114 @@
+<%- contentFor('content') %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Product Add</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+              <li class="breadcrumb-item active">Product Add</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+     <!-- Main content -->
+     <section class="content">
+         <form action="/product-add" name="product_add" id="product_add" method="post" enctype="multipart/form-data">
+          <%if (locals.message) { %>
+            <div class="alert <%= messageClass %>" role="alert">
+              <%= message %>
+          </div>
+          <% } %>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Product Details</h3>
+  
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                    <label for="main_category">Select Main Category</label>
+                    <select id="main_category" name="main_category" class="form-control custom-select">
+                        <option value="">select main category</option>
+                        <% for(var i=0; i < m_cat.length; i++) { %>
+                            <%  if(m_cat[i].id == locals.main_category) { %>
+                                <option value="<%= m_cat[i].id %>" selected><%= m_cat[i].name %></option>
+                            <% } else { %>
+                                <option value="<%= m_cat[i].id %>"><%= m_cat[i].name %></option>
+                            <% } %>
+                        <% } %>       
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sub_category">Select Sub Category</label>
+                    <select id="sub_category" name="sub_category" class="form-control custom-select">
+                       <option value="">select Sub category</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                  <label for="product_name">Product Name</label>
+                  <input type="text" name="product_name" id="product_name" class="form-control" placeholder="Product Name" value="<%= locals.product_name %>" onkeypress="return isalpha(event);">
+                </div>
+                <div class="form-group">
+                  <label for="product_price">Product Price</label>
+                  <input type="text" name="product_price" id="product_price" class="form-control" placeholder="Product Price" value="<%= locals.product_price %>" onkeypress="return decimal_digit(event);">
+                </div>
+                <div class="form-group">
+                  <label for="dis_price">Orignal Price</label>
+                  <input type="text" name="dis_price" id="dis_price" class="form-control" placeholder="Discount Price" value="<%= locals.dis_price %>" onkeypress="return decimal_digit(event);">
+                </div>
+                <div class="form-group">
+                  <label for="product_quntity">Product Quntity</label>
+                  <input type="text" name="product_quntity" id="product_quntity" class="form-control" placeholder="Product Quntity" value="<%= locals.product_quntity %>" onkeypress="return decimal_digit(event);">
+                </div>
+                <div class="form-group">
+                  <label for="product_size">Product Size</label>
+                  <select id="product_size" name="product_size[]" class="form-control custom-select" multiple="multiple" required>
+                    <% for(var i=0; i < size.length; i++) { %>
+                        <option value="<%= size[i].id %>"><%= size[i].size %></option>
+                    <% } %>       
+                </select>
+                </div>
+                <div class="form-group">
+                  <label for="product_color">Product Color</label>
+                  <select id="product_color" name="product_color[]" class="form-control custom-select" multiple="multiple" required>
+                    <% for(var i=0; i < color.length; i++) { %>
+                        <option value="<%= color[i].id %>"><%= color[i].color %></option>
+                    <% } %>       
+                </select>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" class="form-control" placeholder="description" rows="4"><%= locals.description %></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="product_image">Product Image</label>
+                    <input type="file" id="product_image" name="product_image" class="form-control" placeholder="description" accept="image/*" >
+                </div>
+                <a href="/product-list" class="btn btn-secondary">Back</a>
+                <input type="submit" value="Submit" class="btn btn-success float-right">
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+     </form>
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+  
