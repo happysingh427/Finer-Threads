@@ -20,7 +20,46 @@ var storage =   multer.diskStorage({
     callback(null, file.originalname);  
   }  
 });  
-
+router.get('/admin', function(req, res, next) {
+  if(req.session.role_id == 1)
+  {
+    var sql = `SELECT * FROM order_product`;
+      connection.query(sql, function(err, rows, fields) {
+        var total_ord = [];
+        var total_panging_ord = [];
+        if(rows.length > 0)
+        {  
+          for(var i=0; i< rows.length; i++){
+              if(rows[i].ord_status == 1)
+              {
+                total_ord.push(rows);
+              }else{
+                total_panging_ord.push(rows);
+              }
+          }
+        }
+        var user = `SELECT * FROM members WHERE role_id = 2`;
+        connection.query(user, function(err, users, fields) {
+          var reg = [];
+          if(users.length > 0)
+          {
+            for(var i=0; i< users.length; i++){
+              if(users[i].status == 1)
+              {
+                reg.push(users);
+              }
+          }
+          }
+          var t_price = `SELECT SUM(total_price) as tot_price FROM payment`;
+          connection.query(t_price, function(err, t_price, fields) {
+            res.render("admin/home", {layout: "layout",activedash:'active',total_ord:total_ord.length,panding:total_panging_ord.length,reg:reg.length,t_price:t_price[0].tot_price})
+          });
+        });
+      });
+  }else{
+    res.redirect('/login');
+  }
+  })
 
 
 router.get('/', function(req, res, next) {
