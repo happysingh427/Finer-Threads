@@ -441,6 +441,156 @@ router.post('/single-product/:id',function(req,res,next){
     res.redirect('/login');
   }
 })
+// category
+
+router.get('/category-add',function(req,res,next){
+  if(req.session.role_id == 1){
+    const status = 1;
+    let sql = `SELECT * FROM main_catagary WHERE status = "${status}"`;
+    connection.query(sql, function(err, rows, fields) {
+        if (err) throw err;
+        res.render("admin/category_add", {layout: "layout",m_cat:rows,title: 'Color Add',categorylink:'active'})   
+    })
+  }else{
+    res.redirect('/login');
+  }
+});
+
+router.post('/category-add',function(req,res,next){
+  var upload = multer({ storage : storage}).single('c_image');
+  upload(req,res,function(err) { 
+    const { category,c_name,description } = req.body;
+    var errors = [];
+    var sql = `SELECT * FROM sub_catagary WHERE c_name="${c_name}"`;
+    connection.query(sql, function(err, rows, fields) {
+      if(rows.length == 0)
+      {
+        var sql = `INSERT INTO sub_catagary(main_id,c_name,c_image,c_description) VALUES ("${category}","${c_name}","${req.file.originalname}","${description}")`;
+        connection.query(sql, function(err, result) {
+          if (err) throw err;
+          
+          const status = 1;
+          let sql1 = `SELECT * FROM main_catagary WHERE status = "${status}"`;
+          connection.query(sql1, function(err, rows, fields) {
+            errors.push("Category add successfully");
+            res.render("admin/category_add", { message : errors, messageClass: 'alert-success',m_cat:rows,layout: "layout",categorylink:'active'});
+          })
+        }); 
+      }else{
+          const status = 1;
+          let sql1 = `SELECT * FROM main_catagary WHERE status = "${status}"`;
+          connection.query(sql1, function(err, rows, fields) {
+            errors.push("Category already Exits");
+            res.render("admin/category_add", { message : errors, messageClass: 'alert-danger',layout: "layout",m_cat:rows,category,c_name,description,categorylink:'active' });
+          })
+      }
+    });
+  })
+})
+
+router.get('/category-list', function(req, res, next) {
+  if(req.session.role_id == 1){
+    var sql = `SELECT sub.*,main.name 
+                  FROM sub_catagary as sub LEFT JOIN main_catagary as main on main.id = sub.main_id`;
+    connection.query(sql, function(err, rows, fields) {
+      res.render("admin/category_list", {layout: "layout",title: 'Category List', category: rows,categorylink:'active'})
+    })
+  }else{
+    res.redirect('/login');
+  }
+})
+
+router.post('/category-delete',function(req,res,next){
+  var id = req.body.id;
+  console.log(id);
+  let sql = `DELETE FROM sub_catagary WHERE id = ?`;
+  connection.query(sql, id, (error, results, fields) => {
+    if (error)
+      return console.error(error.message);
+      res.json({status:"1",message:"Delete Category successfully"})
+    
+  });
+});
+
+router.get('/category-edit/:id', function(req, res, next) {
+  if(req.session.role_id == 1){
+    var id = req.params.id;
+    var sql = `SELECT sub.*,main.name 
+                  FROM sub_catagary as sub LEFT JOIN main_catagary as main on main.id = sub.main_id where sub.id="${id}"`;
+    connection.query(sql, function(err, rows, fields) {
+      if(rows.length == 1)
+      {
+        const status = 1;
+        let sql1 = `SELECT * FROM main_catagary WHERE status = "${status}"`;
+        connection.query(sql1, function(err, results, fields) {
+          res.render("admin/category_edit", {m_cat:results,category_data:rows,up_id:rows[0].id,layout: "layout",categorylink:'active' });
+        });
+      }
+    })
+  }else{
+    res.redirect('/login');
+  }
+})
+
+router.post('/category-edit/:id', function(req, res, next){
+  if(req.session.role_id == 1){
+    var id = req.params.id;
+    var errors = [];
+    var profile_pic='';
+    var upload = multer({ storage : storage}).single('c_image');
+    upload(req,res,function(err) { 
+      const { category,c_name,description,old_img } = req.body;
+      if(old_img == '')
+      {
+         var sql = `SELECT sub.*,main.name 
+                      FROM sub_catagary as sub LEFT JOIN main_catagary as main on main.id = sub.main_id where sub.id="${id}"`;
+        connection.query(sql, function(err, rows, fields) {
+          if(rows.length == 1)
+          {
+            const status = 1;
+            let sql1 = `SELECT * FROM main_catagary WHERE status = "${status}"`;
+            connection.query(sql1, function(err, results, fields) {
+                errors.push("Category image is required");
+                res.render("admin/category_edit", {message : errors, messageClass: 'alert-danger',m_cat:results,category_data:rows,up_id:rows[0].id,layout: "layout",categorylink:'active' });
+            });
+          }
+        })
+      }else{
+          if(req.file != null && typeof req.file == 'object') 
+            {
+              profile_pic = req.file.originalname;
+            }
+            if(profile_pic == '')
+            {
+              const { category,c_name,description,old_img } = req.body;
+              var up_query = `UPDATE sub_catagary SET main_id="${category}",c_name="${c_name}",c_image="${old_img}",c_description="${description}"  WHERE id="${id}"`;
+            }else{
+              const { category,c_name,description,old_img } = req.body;
+              var up_query = `UPDATE sub_catagary SET main_id="${category}",c_name="${c_name}",c_image="${profile_pic}",c_description="${description}"  WHERE id="${id}"`;
+            }
+            connection.query(up_query, function(err, result, fields) {
+              if (err) throw err;
+              var sql = `SELECT sub.*,main.name 
+                FROM sub_catagary as sub LEFT JOIN main_catagary as main on main.id = sub.main_id where sub.id="${id}"`;
+                connection.query(sql, function(err, rows, fields) {
+                  if(rows.length == 1)
+                  {
+                    const status = 1;
+                    let sql1 = `SELECT * FROM main_catagary WHERE status = "${status}"`;
+                    connection.query(sql1, function(err, results, fields) {
+                      errors.push("Category update successfully");
+                        res.render("admin/category_edit", {message : errors, messageClass: 'alert-success',m_cat:results,category_data:rows,up_id:rows[0].id,layout: "layout",categorylink:'active' });
+                    });
+                  }
+                })             
+          })
+      }
+    });
+
+  }else{
+    res.redirect('/login');
+  }
+})
 
 router.get('/cart',function(req,res,next){
   if(req.session.role_id == 2)
