@@ -254,6 +254,158 @@ router.get('/admin', function(req, res, next) {
       res.redirect('/login');
     }
   });
+router.get('/changepassword', function(req,res,next){
+    if(req.session.role_id == 1){
+      res.render("admin/change_password", {layout: "layout",title: 'Change Password',settinglink:'active'}) 
+    }else{
+      res.redirect('/login');
+    }
+});
+  
+router.post('/changepassword', function(req,res,next){
+    if(req.session.role_id == 1){
+      var user_id = req.session.uid
+      var errors = [];
+      const {old_pass,new_pass,con_pass} = req.body;
+      var password1 = md5(new_pass);
+      var old_pass1 = md5(old_pass);
+      var sql =  `SELECT * FROM members WHERE status=1 AND id=${user_id}`;
+      connection.query(sql, function(err, rows, fields) {
+        if(rows.length > 0)
+        {
+          if(old_pass1 == rows[0].password) 
+          {
+            var up_query = `UPDATE members SET password = "${password1}" WHERE status = 1 AND id=${user_id}`;
+            connection.query(up_query, function(err, result, fields) {
+              if (err) throw err;
+              res.redirect('/logout');
+            });
+          }else{
+            errors.push("Password Not Match");
+            res.render("admin/change_password", {message : errors, messageClass: 'alert-danger',layout: "layout",title: 'Change Password',settingtlink:'active'})
+          }
+        }
+      });
+  
+    }else{
+      res.redirect('/login');
+    }
+  
+});
+router.get('/manage-profile',function(req,res,next){
+  if(req.session.role_id == 2)
+  {
+    var role_id = req.session.role_id;
+    var user_id = req.session.uid;
+    const status = 1;
+    var sql = `SELECT meb.*,coun.id as c_id,coun.name as cou_name,st.id as sid,st.name as st_name,ct.id as cid,ct.name as ct_name
+    from members as meb
+      left join countries as coun on coun.id = meb.country
+      left join states as st on st.id = meb.state
+      left join cities as ct on ct.id = meb.city
+      where meb.id = "${user_id}"`;
+      connection.query(sql, function(err, rows, fields) {
+        var coun = `SELECT id,name FROM countries where flag = 1`;
+        connection.query(coun, function(err, coun, fields) {
+          if(rows.length == 1)
+          {
+            res.render("user/manage_profile", {role_id: role_id,country:coun,user_data:rows,layout: "user_layout"});
+          }
+        })
+    })
+  }else{
+    res.redirect('/login');
+  }
+})
+
+router.post('/manage-profile',function(req,res,next){
+  if(req.session.role_id == 2)
+  {
+    var role_id = req.session.role_id;
+    var user_id = req.session.uid;
+    const status = 1;
+    var errors = [];
+    var profile_pic = '';
+    var upload = multer({ storage : storage}).single('profile_pic');
+        upload(req,res,function(err) { 
+          const { first_name,last_name,email,phone_no,old_img,country,state_id,state,city,zip_code,address } = req.body;
+            if(req.file != null && typeof req.file == 'object') 
+            {
+              profile_pic = req.file.originalname;
+            }
+            if(profile_pic == '')
+            {
+              const { first_name,last_name,email,phone_no,old_img,country,state_id,state,city,zip_code,address } = req.body;
+              var up_query = `UPDATE members SET first_name="${first_name}",last_name="${last_name}",email_id="${email}",phone_no="${phone_no}",profile_pic="${old_img}",address="${address}",city="${city}",state="${state}",country="${country}",zipcode="${zip_code}"  WHERE id="${user_id}"`;
+            }else{
+              const { first_name,last_name,email,phone_no,old_img,country,state_id,state,city,zip_code,address } = req.body;
+              var up_query = `UPDATE members SET first_name="${first_name}",last_name="${last_name}",email_id="${email}",phone_no="${phone_no}",profile_pic="${profile_pic}",address="${address}",city="${city}",state="${state}",country="${country}",zipcode="${zip_code}"  WHERE id="${user_id}"`;
+            }
+            connection.query(up_query, function(err, result, fields) {
+                if (err) throw err;
+                var sql = `SELECT meb.*,coun.id as c_id,coun.name as cou_name,st.id as sid,st.name as st_name,ct.id as cid,ct.name as ct_name
+                              from members as meb
+                                left join countries as coun on coun.id = meb.country
+                                left join states as st on st.id = meb.state
+                                left join cities as ct on ct.id = meb.city
+                                where meb.id = "${user_id}"`;
+                connection.query(sql, function(err, rows, fields) {
+                  var coun = `SELECT id,name FROM countries where flag = 1`;
+                  connection.query(coun, function(err, coun, fields) {
+                    if(rows.length == 1)
+                    {
+                      errors.push("Profile update successfully");
+                      res.render("user/manage_profile", {role_id: role_id,country:coun,message : errors, messageClass: 'alert-success',up_id:rows[0].id,user_data:rows,layout: "user_layout" });
+                    }
+                  });
+                });
+            })
+        });
+  }else{
+    res.redirect('/login');
+  }
+});
+
+
+router.get('/change-password',function(req,res,next){
+  if(req.session.role_id == 2)
+  {
+    var role_id = req.session.role_id;
+    res.render("user/change_password", {role_id: role_id,layout: "user_layout"})
+  }else{
+    res.redirect('/login');
+  }
+});
+router.post('/change-password',function(req,res,next){
+  if(req.session.role_id == 2)
+  {
+    var role_id = req.session.role_id;
+    var user_id = req.session.uid
+    var errors = [];
+    const {old_pass,new_pass,con_pass} = req.body;
+    var password1 = md5(new_pass);
+    var old_pass1 = md5(old_pass);
+    var sql =  `SELECT * FROM members WHERE status=1 AND id=${user_id}`;
+    connection.query(sql, function(err, rows, fields) {
+      if(rows.length > 0)
+      {
+        if(old_pass1 == rows[0].password) 
+        {
+          var up_query = `UPDATE members SET password = "${password1}" WHERE status = 1 AND id=${user_id}`;
+          connection.query(up_query, function(err, result, fields) {
+            if (err) throw err;
+            res.redirect('/logout');
+          });
+        }else{
+          errors.push("Password Not Match");
+          res.render("user/change_password", {role_id: role_id,message : errors, messageClass: 'alert-danger',layout: "user_layout",title: 'Change Password'})
+        }
+      }
+    });
+  }else{
+    res.redirect('/login');
+  }
+});
 
 
 router.get('/', function(req, res, next) {

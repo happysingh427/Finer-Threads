@@ -34,6 +34,7 @@
           <h2 class="module-title font-alt">Latest in Men</h2>
           <% for(var i=0; i < product_list.length; i++) { %>
             <% if(product_list[i].main_id == 1){ %>
+              <a href="/category-product/<%= product_list[i].id %>">
             <div class="col-sm-6 col-md-3 col-lg-3">
               <div class="shop-item">
                 <div class="shop-item-image"><img src="uploads/<%= product_list[i].c_image %>" class="pro_img" alt="<%= product_list[i].c_image %>"/>
@@ -41,13 +42,15 @@
                 <h4 class="shop-item-title font-alt"><a href="#"><%= product_list[i].c_name %></a></h4>
               </div>
             </div>
+            </a>
           <% } %>
           <% } %>
         </div>
         <div class="row multi-columns-row">
-          <h2 class="module-title font-alt">Latest in Women</h2>
+          <h2 class="module-title font-alt">Latest in Womwn</h2>
           <% for(var i=0; i < product_list.length; i++) { %>
             <% if(product_list[i].main_id == 2){ %>
+              <a href="/category-product/<%= product_list[i].id %>">
             <div class="col-sm-6 col-md-3 col-lg-3">
               <div class="shop-item">
                 <div class="shop-item-image"><img src="uploads/<%= product_list[i].c_image %>" class="pro_img" alt="<%= product_list[i].c_image %>"/>
@@ -55,20 +58,23 @@
                 <h4 class="shop-item-title font-alt"><a href="#"><%= product_list[i].c_name %></a></h4>
               </div>
             </div>
+          </a>
           <% } %>
           <% } %>
         </div>
         <div class="row multi-columns-row">
-          <h2 class="module-title font-alt">Latest in Kids</h2>
+          <h2 class="module-title font-alt">Latest in Children</h2>
           <% for(var i=0; i < product_list.length; i++) { %>
             <% if(product_list[i].main_id == 3){ %>
-            <div class="col-sm-6 col-md-3 col-lg-3">
-              <div class="shop-item">
-                <div class="shop-item-image"><img src="uploads/<%= product_list[i].c_image %>" class="pro_img" alt="<%= product_list[i].c_image %>"/>
+              <a href="/category-product/<%= product_list[i].id %>">
+              <div class="col-sm-6 col-md-3 col-lg-3">
+                <div class="shop-item">
+                  <div class="shop-item-image"><img src="uploads/<%= product_list[i].c_image %>" class="pro_img" alt="<%= product_list[i].c_image %>"/>
+                  </div>
+                  <h4 class="shop-item-title font-alt"><a href="#"><%= product_list[i].c_name %></a></h4>
                 </div>
-                <h4 class="shop-item-title font-alt"><a href="#"><%= product_list[i].c_name %></a></h4>
               </div>
-            </div>
+            </a>
           <% } %>
           <% } %>
         </div>
@@ -83,7 +89,6 @@
           </div>
         </div>
       </div>
-      <div class="video-player" data-property="{videoURL:'https://www.youtube.com/watch?v=EMy5krGcoOU', containment:'.module-video', startAt:0, mute:true, autoPlay:true, loop:true, opacity:1, showControls:false, showYTLogo:false, vol:25}"></div>
     </section>
     <hr class="divider-w">
     <section class="module" id="news">

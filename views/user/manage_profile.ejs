@@ -1,0 +1,86 @@
+<%- contentFor('user_content') %>
+<section class="module">
+    <div class="container">
+      <div class="row">
+        <form class="form" method="post" name="manage_profile" id="manage_profile" action="/manage-profile" enctype="multipart/form-data">
+            <% for(var i=0; i < user_data.length; i++) { %>
+            <%if (locals.message) { %>
+                <div class="alert <%= messageClass %>" role="alert">
+                  <%= message %>
+              </div>
+              <% } %>
+            <div class="col-sm-5 col-sm-offset-1 mb-sm-40">
+                <h4 class="font-alt text-center">Manage Profile</h4>
+                <hr class="divider-w mb-10">
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                  <input class="form-control" id="first_name" type="text" name="first_name" placeholder="First Name" value="<%= locals.user_data[i].first_name %>" onkeypress="return isalpha(event);" />
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                  <input class="form-control" id="last_name" type="text" name="last_name" placeholder="Last Name"  value="<%= locals.user_data[i].last_name %>" />
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                  <input class="form-control" id="email" type="text" name="email" placeholder="Email"  value="<%= locals.user_data[i].email_id %>" onkeypress="return isalpha(event);" />
+                </div>
+                <div class="form-group">
+                    <label for="phone_no">Phone Number</label>
+                  <input class="form-control" id="phone_no" type="text" name="phone_no" placeholder="Phone Number" value="<%= locals.user_data[i].phone_no %>" onkeypress="return isNumber(event);" />
+                </div>
+                <input type="hidden" name="old_img" id="old_img" value="<%= locals.user_data[i].profile_pic %>" >
+                <div class="form-group">
+                    <label for="profile_pic">Profile Picture</label>
+                  <input class="form-control" id="profile_pic" type="file" name="profile_pic" accept="image/*" />
+                </div>
+               
+            </div>
+            <div class="col-sm-5 col-sm-offset-1 mb-sm-40">
+                <h4 class="font-alt text-center">Billing Details</h4>
+                <hr class="divider-w mb-10">
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select name="country" id="country" class="form-control input-lg">
+                       <option value="">Select Country</option>
+                       <% for(var j=0; j < country.length; j++) { %>
+                            <% if(country[j].id == user_data[i].country){ %>
+                                <option value="<%= country[j].id %>" selected><%= country[j].name %></option>
+                            <% } else { %> 
+                                <option value="<%= country[j].id %>"><%= country[j].name %></option>    
+                            <% } %>
+                        <% } %>  
+                    </select>
+                </div>
+                <input type="hidden" name="state_id" id="state_id" value="<%= user_data[i].sid %>">
+                <div class="form-group">
+                    <label for="state">State</label>
+                    <select name="state" id="state" class="form-control input-lg">
+                       <option value="">Select State</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <select name="city" id="city" class="form-control input-lg">
+                       <option value="">Select City</option>
+                       <% if(user_data[i].cid != '') { %>
+                            <option value="<%= user_data[i].cid %>" selected><%= user_data[i].ct_name %></option>  
+                        <% } %> 
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="zip_code">Zip Code</label>
+                    <input type="text" id="zip_code" name="zip_code" class="form-control" placeholder="Zip Code" value="<%= locals.user_data[i].zipcode %>">
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="address" class="form-control" rows="4" placeholder="Address"><%= locals.user_data[i].address %></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-block btn-round btn-b">Update</button>
+                </div>
+            </div>
+            <% } %>
+        </form>
+      </div>
+    </div>
+  </section>
