@@ -2,6 +2,7 @@ var mysql = require('mysql');
 var express = require('express')
 var md5 = require('md5'); 
 const multer = require("multer")
+const Razorpay = require('razorpay');
 
 var router = express.Router()
 
@@ -20,6 +21,12 @@ var storage =   multer.diskStorage({
     callback(null, file.originalname);  
   }  
 });  
+
+const instance = new Razorpay({
+  key_id: 'rzp_test_4Ul7qSZnvkrOzc',
+  key_secret: 'jlOs1tEEnlJ9ZNtUg5n6yl2w'
+});
+
 router.get('/admin', function(req, res, next) {
   if(req.session.role_id == 1)
   {
