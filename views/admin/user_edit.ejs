@@ -1,0 +1,146 @@
+<%- contentFor('content') %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>User Edit</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+              <li class="breadcrumb-item active">User Edit</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+     <!-- Main content -->
+     <section class="content">
+       
+         <form action="/user-edit/<%= up_id %>" name="user_edit" id="user_edit" method="post" enctype="multipart/form-data">
+            <% for(var i=0; i < user_data.length; i++) { %>
+          <%if (locals.message) { %>
+            <div class="alert <%= messageClass %>" role="alert">
+              <%= message %>
+          </div>
+          <% } %>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">User Details</h3>
+  
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                    <label for="user_type">User Type</label>
+                    <select id="user_type" name="user_type" class="form-control custom-select">
+                      <option value="1" <%= user_data[i].role_id == '1' ? 'selected': '' %>>Admin</option>
+                      <option value="2" <%= user_data[i].role_id == '2' ? 'selected': '' %>>User</option>
+                    </select>
+                  </div>
+                <div class="form-group">
+                  <label for="first_name">First Name</label>
+                  <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" value="<%= locals.user_data[i].first_name %>" onkeypress="return isalpha(event);">
+                </div>
+                <div class="form-group">
+                  <label for="Last_name">Last Name</label>
+                  <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Lasr Name" value="<%= locals.user_data[i].last_name %>" onkeypress="return isalpha(event);">
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="text" name="email" id="email" class="form-control" placeholder="Email Address" value="<%= locals.user_data[i].email_id %>">
+                </div>
+                <input type="hidden" name="old_img" id="old_img" value="<%= locals.user_data[i].profile_pic %>" >
+                <div class="form-group">
+                  <label for="cpassword">Profile Pic</label>
+                  <input type="file" name="profile_pic" id="profile_pic" class="form-control">
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <div class="col-md-6">
+            <div class="card card-secondary">
+              <div class="card-header">
+                <h3 class="card-title">Billing Details</h3>
+  
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select id="country" name="country" class="form-control custom-select">
+                        <option value="">Select Country</option>
+                        <% for(var j=0; j < country.length; j++) { %>
+                            <% if(country[j].id == user_data[i].country){ %>
+                                <option value="<%= country[j].id %>" selected><%= country[j].name %></option>
+                            <% } else { %> 
+                                <option value="<%= country[j].id %>"><%= country[j].name %></option>    
+                            <% } %>
+                            
+                        <% } %>       
+                    </select>
+                </div>
+                <input type="hidden" name="state_id" id="state_id" value="<%= user_data[i].sid %>">
+                <div class="form-group">
+                    <label for="country">State</label>
+                    <select id="states" name="states" class="form-control custom-select">
+                        <option value="">Select State</option>     
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <select id="city" name="city" class="form-control custom-select">
+                        <option value="">Select City</option>
+                        <% if(user_data[i].cid != '') { %>
+                        <option value="<%= user_data[i].cid %>" selected><%= user_data[i].ct_name %></option>  
+                        <% } %>   
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="zip_code">Zip Code</label>
+                    <input type="text" id="zip_code" name="zip_code" class="form-control" placeholder="Zip Code" value="<%= locals.user_data[i].zipcode %>">
+                </div>
+                <div class="form-group">
+                  <label for="phone_no">Phone Number</label>
+                  <input type="text" id="phone_no" name="phone_no" class="form-control" placeholder="Phone Number" value="<%= locals.user_data[i].phone_no %>" onkeypress="return isNumber(event);">
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="address" class="form-control" rows="4"><%= locals.user_data[i].address %></textarea>
+                  </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <a href="/user-list" class="btn btn-secondary">Back</a>
+            <button type="submit" value="update User" class="btn btn-warning float-right">Update user </button>
+          </div>
+        </div>
+        <% } %>
+     </form>
+   
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+  

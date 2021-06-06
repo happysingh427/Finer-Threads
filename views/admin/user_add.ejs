@@ -1,0 +1,140 @@
+<%- contentFor('content') %>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>User Add</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+              <li class="breadcrumb-item active">User Add</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+     <!-- Main content -->
+     <section class="content">
+         <form action="/user-add" name="user_add" id="user_add" method="post" enctype="multipart/form-data">
+          <%if (locals.message) { %>
+            <div class="alert <%= messageClass %>" role="alert">
+              <%= message %>
+          </div>
+          <% } %>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">User Details</h3>
+  
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                    <label for="user_type">User Type</label>
+                    <select id="user_type" name="user_type" class="form-control custom-select">
+                      <option value="1">Admin</option>
+                      <option value="2">User</option>
+                    </select>
+                  </div>
+                <div class="form-group">
+                  <label for="first_name">First Name</label>
+                  <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name" value="<%= locals.first_name %>" onkeypress="return isalpha(event);">
+                </div>
+                <div class="form-group">
+                  <label for="Last_name">Last Name</label>
+                  <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Lasr Name" value="<%= locals.last_name %>" onkeypress="return isalpha(event);">
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="text" name="email" id="email" class="form-control" placeholder="Email Address" value="<%= locals.email %>">
+                </div>
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+                </div>
+                <div class="form-group">
+                  <label for="cpassword">Confirm Password</label>
+                  <input type="password" name="cpassword" id="cpassword" class="form-control" placeholder="Confirm Password">
+                </div>
+                <div class="form-group">
+                  <label for="cpassword">Profile Pic</label>
+                  <input type="file" name="profile_pic" id="profile_pic" class="form-control">
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <div class="col-md-6">
+            <div class="card card-secondary">
+              <div class="card-header">
+                <h3 class="card-title">Billing Details</h3>
+  
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select id="country" name="country" class="form-control custom-select">
+                        <option value="">Select Country</option>
+                        <% for(var i=0; i < country.length; i++) { %>
+                            <option value="<%= country[i].id %>"><%= country[i].name %></option>
+                        <% } %>       
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="country">State</label>
+                    <select id="states" name="states" class="form-control custom-select">
+                        <option value="">Select State</option>     
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <select id="city" name="city" class="form-control custom-select">
+                        <option value="">Select City</option>     
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="zip_code">Zip Code</label>
+                    <input type="text" id="zip_code" name="zip_code" class="form-control" placeholder="Zip Code" value="<%= locals.zip_code %>">
+                </div>
+                <div class="form-group">
+                  <label for="phone_no">Phone Number</label>
+                  <input type="text" id="phone_no" name="phone_no" class="form-control" placeholder="Phone Number" value="<%= locals.phone_no %>" onkeypress="return isNumber(event);">
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="address" class="form-control" rows="4" value="<%= locals.address %>"></textarea>
+                  </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <a href="/user-list" class="btn btn-secondary">Back</a>
+            <input type="submit" value="Create new User" class="btn btn-success float-right">
+          </div>
+        </div>
+     </form>
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+  
