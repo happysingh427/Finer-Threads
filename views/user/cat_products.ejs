@@ -1,0 +1,36 @@
+<%- contentFor('user_content') %>
+<div class="main">
+    <section class="module bg-dark-60 shop-page-header" data-background="/assets/images/shop/product-page-bg.jpg">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h2 class="module-title font-alt">Shop Products</h2>
+            <div class="module-subtitle font-serif">A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr class="divider-w">
+    <section class="module-small">
+      <div class="container">
+        <div class="row multi-columns-row">
+            <% if(product_list.length > 0) { %>
+                <% for(i=0; i < product_list.length ; i++) { %>
+                    <div class="col-sm-6 col-md-4 col-lg-4">
+                        <a href="/single-product/<%= product_list[i].id %>">
+                            <div class="shop-item">
+                            <div class="shop-item-image"><img src="/uploads/<%= product_list[i].p_image  %>" class="pro_img" alt="<%= product_list[i].p_name  %>"/>
+                            </div>
+                            <h4 class="shop-item-title font-alt"><a href="#"><%= product_list[i].p_name  %></a></h4>$<%= product_list[i].p_price  %>
+                            </div>
+                        </a>
+                    </div> 
+                <% } %>
+          <% }else{ %>
+             <h2 class="text-center">Product Not Found</h2>
+            <% } %>  
+             
+                                                                                     
+        </div>
+      </div>
+    </section>

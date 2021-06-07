@@ -1,3 +1,4 @@
+<!-- jQuery -->
 <script src="/plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="/plugins/jquery-ui/jquery-ui.min.js"></script>
@@ -10,14 +11,35 @@
 <script src="/assets/lib/flexslider/jquery.flexslider.js"></script>
 <script src="/assets/lib/owl.carousel/dist/owl.carousel.min.js"></script>
 <script src="/assets/lib/smoothscroll.js"></script>
+<script src="/toastr.min.js"></script>
 <script src="/assets/lib/magnific-popup/dist/jquery.magnific-popup.js"></script>
 <script src="/assets/lib/simple-text-rotator/jquery.simple-text-rotator.min.js"></script>
+<script src="/plugins/select2/js/select2.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="/plugins/jszip/jszip.min.js"></script>
+<script src="/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="/config.js"></script>
 <script src="/assets/js/plugins.js"></script>
 <script src="/assets/js/main.js"></script>
 <script src="/js/login.js"></script>
 <script src="/js/register.js"></script>
 <script>
+    $('#country').select2();
+    $('#state').select2();
+    $('#city').select2();
     $("#main_category").change(function(){
       var sub_id=$(this).val();
       $.ajax({
@@ -44,6 +66,11 @@
       });
   });
   $(document).ready(function(){
+      var ord_table;
+      ord_table = $("#ord_table").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print"]
+      }).buttons().container().appendTo('#ord_table_wrapper .col-md-6:eq(0)');
     var main_category = $('#main_category').val();
     $.ajax({
         url:'/get_sub_category',
@@ -73,5 +100,238 @@
             } 
         }
         });
+        $(document).on('click', '.remove_cart', function () {
+        if (confirm("Do yo want to delete this record?"))
+        {
+            var id = $(this).attr("data-id");
+            $.ajax({
+                url: "/cart-delete",
+                type: "POST",
+                data: {id: id},
+                dataType: "json",
+                success: function (data) {
+                    if (data.status == 1)
+                    {
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "priority": 'success'
+                        }
+                        toastr.success(data.message);
+                        location.reload();
+                    } 
+                    else
+                    {
+                        toastr.options = {
+                            "closeButton": true,
+                            "debug": false,
+                            "newestOnTop": true,
+                            "progressBar": false,
+                            "positionClass": "toast-top-right",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut",
+                            "priority": 'error'
+                        }
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        }
+    });
   })
+</script>
+<script>
+    $(document).ready(function () {
+        $('#country').change(function () {
+            //  var val = $(this).val();
+            var id = $("select#country option").filter(":selected").val();
+            $.ajax({
+                url: '/get_state',
+                method: "POST",
+                dataType: "json",
+                data: { country: id },
+                success: function (data) {
+                  console.log(data);
+                    if (data.status == "success") {
+                        var s_html = '';
+                        for (var i = 0; i < data.result.length; i++) {
+                            var stat_name = data.result[i].name;
+                            var stat_id = data.result[i].id;
+                            s_html += "<option value='" + stat_id + "'>" + stat_name + "</option>";
+                        }
+                        $('#state').html(s_html);
+                    }
+                }
+            });
+        });
+  
+        $('#state').change(function () {
+          //  var val = $(this).val();
+          var id = $("select#state option").filter(":selected").val();
+          
+          $.ajax({
+              url: '/get_city',
+              method: "POST",
+              dataType: "json",
+              data: { state: id },
+              success: function (data) {
+                  if (data.status == "success") {
+                      var c_html = '';
+                      for (var i = 0; i < data.data.length; i++) {
+                          var city_name = data.data[i].name;
+                          var c_id = data.data[i].id;
+                          c_html += "<option value='" + c_id + "'>" + city_name + "</option>";
+                      }
+                      $('#city').html(c_html);
+                  }
+              }
+          });
+      });
+  
+      var state_id = $('#state_id').val();
+      var id = $("select#country option").filter(":selected").val();
+      $.ajax({
+          url: '/get_state',
+          method: "POST",
+          dataType: "json",
+          data: { country: id },
+          success: function (data) {
+  
+              if (data.status == "success") {
+                  var s_html = '';
+                  for (var i = 0; i < data.result.length; i++) {
+                      var stat_name = data.result[i].name;
+                      var stat_id = data.result[i].id;
+                      if(stat_id == state_id)
+                      {
+                          s_html += "<option value='" + stat_id + "' selected>" + stat_name + "</option>";
+                      }else
+                      {
+                          s_html += "<option value='" + stat_id + "'>" + stat_name + "</option>";
+                      }
+                  }
+                  $('#state').html(s_html);
+              }
+          }
+      });       
+    });
+  
+    const paymentHandler = (res) => {
+            console.log(res.razorpay_payment_id);
+            console.log(res.razorpay_order_id);
+            console.log(res.razorpay_signature);
+            console.log(res);
+          }
+      function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      }
+    $('.pay_now').on('click',function(e){
+        var total = $('#tot_price').val();
+        var u_id = $("#user_id").val();
+        var f_name = $("#f_name").val();
+        var l_name = $("#l_name").val();
+        var u_email = $("#u_email").val();
+        var u_phone = $("#u_phone").val();
+        var ord_ids = $('#ord_id').val();
+         var options = {
+        key: "rzp_test_4Ul7qSZnvkrOzc",
+        amount: total * 100,
+        currency: "USD",
+        name: "FINER THREADS",
+        description: "FINER THREADS",
+       // image: "images/download.jfif",
+        handler: function (response) {  
+           // console.log(response);  
+            setCookie('cookiedata',JSON.stringify({total_price: total,payment_id: response.razorpay_payment_id,currency : 'USD', u_id : u_id, f_name : f_name,l_name:l_name, u_email : u_email,ord_ids:ord_ids}), 1)
+            location.replace("http://localhost:9000/success")
+        },
+        prefill: {  
+          name: f_name+' '+ l_name,
+          email: u_email,
+          contact: u_phone,
+        },
+        notes: {
+          address: "Razorpay Corporate Office",
+        },
+        theme: {
+          color: "#ffc107",
+        },
+      };
+    var rzp1 = new Razorpay(options);
+     rzp1.open();
+    e.preventDefault();
+    });
+  </script>
+  <script>
+    function demoFromHTML() {
+    var pdf = new jsPDF('p', 'pt', 'letter');
+    // source can be HTML-formatted string, or a reference
+    // to an actual DOM element from which the text will be scraped.
+    source = $('#in_data_pdf')[0];
+
+    // we support special element handlers. Register them with jQuery-style 
+    // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
+    // There is no support for any other type of selectors 
+    // (class, of compound) at this time.
+    specialElementHandlers = {
+        // element with id of "bypass" - jQuery style selector
+        '#bypassme': function (element, renderer) {
+            // true = "handled elsewhere, bypass text extraction"
+            return true
+        }
+    };
+    margins = {
+        top: 80,
+        bottom: 60,
+        left: 40,
+        width: 522
+    };
+    // all coords and widths are in jsPDF instance's declared units
+    // 'inches' in this case
+    pdf.fromHTML(
+    source, // HTML string or DOM elem ref.
+    margins.left, // x coord
+    margins.top, { // y coord
+        'width': margins.width, // max width of content on PDF
+        'elementHandlers': specialElementHandlers
+    },
+
+    function (dispose) {
+        // dispose: object with X, Y of the last line add to the PDF 
+        //          this allow the insertion of new lines after html
+        pdf.save('Invoice.pdf');
+    }, margins);
+}
+$('#printInvoice').click(function(){
+    Popup($('.invoice')[0].outerHTML);
+    function Popup(data) 
+    {
+        window.print();
+        return true;
+    }
+});
 </script>

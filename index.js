@@ -6,6 +6,7 @@ ejs = require('ejs'),
 expressLayouts = require('express-ejs-layouts')
 var session = require('express-session');
 const moment = require("moment");
+const cookieParser = require('cookie-parser');
 var app = express()
 var port = process.env.PORT || 9000
     
@@ -26,7 +27,7 @@ app.use(session({
 app.use(expressLayouts)
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
-
+app.use(cookieParser());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 

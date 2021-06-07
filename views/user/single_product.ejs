@@ -20,7 +20,7 @@
             </div>
             <div class="row mb-20">
               <div class="col-sm-12">
-                <div class="price font-alt"><span class="amount">$<%= product_list[i].p_price %></span></div>
+                <div class="price font-alt"><span class="amount">$<%= product_list[i].p_price %></span><del class="del_price"> <% if(product_list[i].dis_price != 0) { %> $<%= product_list[i].dis_price  %> <% } %> </del></div>
               </div>
             </div>
             <div class="row mb-20">
@@ -34,7 +34,7 @@
                 <div class="row mb-20">
                 <div class="col-sm-4 mb-sm-20">
                     <label for="quntity">Quntity</label>
-                    <input class="form-control input-lg" type="number" name="quntity" id="quntity" value="1" max="40" min="1" required="required"/>
+                    <input class="form-control input-lg" type="number" name="quntity" id="quntity" value="1" max="40" min="1" required="required" onkeypress="return isNumber(event);"/>
                 </div>
                 <div class="col-sm-4 mb-sm-20">
                     <label for="size">Size</label>
@@ -64,7 +64,7 @@
             </form>
             <div class="row mb-20">
               <div class="col-sm-12">
-                <div class="product_meta">Categories:<a href="#"> ,<%= product_list[i].name %> </a><a href="#"><%= product_list[i].c_name %> </a>
+                <div class="product_meta">Categories:<a href="#"><%= product_list[i].name %> </a>, <a href="#"><%= product_list[i].c_name %> </a>
                 </div>
               </div>
             </div>

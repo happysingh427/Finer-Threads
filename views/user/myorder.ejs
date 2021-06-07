@@ -1,0 +1,55 @@
+<%- contentFor('user_content') %>
+<div class="main">
+    <section class="module">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h1 class="module-title font-alt">My Orders</h1>
+          </div>
+        </div>
+        <hr class="divider-w pt-20">
+        <% if(order.length != 0) { %>
+        <div class="row">
+          <div class="col-sm-12">
+            <table class="table table-striped table-border checkout-table" id="ord_table">
+              <thead>
+                <tr>
+                    <th>Sl No</th>
+                    <th>Image</th>
+                    <th>product Name</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>size</th>
+                    <th>Color</th>
+                    <th>Quntity</th>
+                    <th>price</th>
+                    <th>Total Price</th>
+                    <th>Payment status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% for(var i=0; i < order.length; i++) { %>
+                    <tr>
+                        <td><%= i+1 %></td>
+                        <td><img src="/uploads/<%= order[i].p_image %>" class="prd_img" alt="<%= order[i].p_name %>"> </td>
+                        <td><%= order[i].p_name %></td>
+                        <td><%= order[i].first_name %></td>
+                        <td><%= order[i].email_id %></td>
+                        <td><%= order[i].size %></td>
+                        <td><%= order[i].color %></td>
+                        <td><%= order[i].quntity %></td>
+                        <td>$<%= order[i].price %></td>
+                        <td>$<%= order[i].total_price %></td>
+                        <td><% if(order[i].ord_status == 1){ %> Success <% } else { %> Panding <% } %></td>
+                    </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <hr class="divider-w">
+        <% } else { %>
+            <h2 class="text-center">no oreder found please explor products <a href="/products" class="btn btn-dark">View products</a></h2>
+         <% } %>
+      </div>
+    </section>

@@ -48,6 +48,7 @@
 <script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/js/bootstrap-colorpicker.js"></script>
 <script src="/plugins/select2/js/select2.js"></script>
+<script src="/config.js"></script>
 <script src="/toastr.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/dist/js/adminlte.js"></script>
@@ -82,6 +83,10 @@
       "responsive": true, "lengthChange": false, "autoWidth": false,
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
       }).buttons().container().appendTo('#category_table_wrapper .col-md-6:eq(0)');
+      product_list = $("#payment_table").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#payment_table_wrapper .col-md-6:eq(0)');
     $(document).on('click', '.delete_user', function () {
         if (confirm("Do yo want to delete this record?"))
         {
@@ -402,6 +407,8 @@
         });
     });
   });
+
+
 
 </script>
 <script>

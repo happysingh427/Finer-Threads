@@ -15,6 +15,10 @@
           </li>
           <% } %>
           <% if(locals.role_id == 2){ %>
+          <li><a href="/myorder">My Orders</a>
+          </li>
+          <% } %>
+          <% if(locals.role_id == 2){ %>
           <li><a href="/cart">View Cart</a>
           </li>
           <% } %>
@@ -28,6 +32,8 @@
           <% } else { %>
             <li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">My Account</a>
               <ul class="dropdown-menu">
+                <li><a href="/manage-profile">Manage Profile</a></li>
+                <li><a href="/change-password">Change Password</a></li>
                 <li><a href="/logout">Logout</a></li>
               </ul>
             </li> 

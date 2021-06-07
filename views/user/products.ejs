@@ -54,7 +54,7 @@
                             <div class="shop-item">
                             <div class="shop-item-image"><img src="uploads/<%= product_list[i].p_image  %>" class="pro_img" alt="<%= product_list[i].p_name  %>"/>
                             </div>
-                            <h4 class="shop-item-title font-alt"><a href="#"><%= product_list[i].p_name  %></a></h4>$<%= product_list[i].p_price  %>
+                            <h4 class="shop-item-title font-alt"><a href="#"><%= product_list[i].p_name  %></a></h4>$<%= product_list[i].p_price  %><del class="del_price"> <% if(product_list[i].dis_price != 0) { %> $<%= product_list[i].dis_price  %> <% } %> </del>
                             </div>
                         </a>
                     </div> 
